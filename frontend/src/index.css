@@ -28,8 +28,13 @@
 
 /* Custom Leaflet Map styling */
 .leaflet-container {
-  background-color: #06080d !important;
+  background-color: #0c0f17 !important;
   font-family: inherit;
+}
+
+/* Professional Dark Mode Map Filter (Transforms Free OSM to Cyber Dark, 0 API keys) */
+.dark-map-tiles {
+  filter: invert(100%) hue-rotate(180deg) brightness(88%) contrast(95%) saturate(35%) !important;
 }
 
 .leaflet-popup-content-wrapper {

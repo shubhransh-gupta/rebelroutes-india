@@ -102,37 +102,50 @@ export const MapView: React.FC<MapViewProps> = ({
     return directPolyline[directPolyline.length - 1];
   }, [directPolyline]);
 
-  const [mapStyle, setMapStyle] = useState<'dark' | 'osm' | 'voyager' | 'satellite'>('dark');
+  type MapStyleType = 'dark' | 'osm' | 'day' | 'satellite' | 'transit';
+  const [mapStyle, setMapStyle] = useState<MapStyleType>('dark');
   const [styleMenuOpen, setStyleMenuOpen] = useState(false);
 
-  const tileConfigs = {
+  const tileConfigs: Record<
+    MapStyleType,
+    {
+      name: string;
+      url: string;
+      attribution: string;
+      subdomains?: string;
+      className?: string;
+    }
+  > = {
     dark: {
-      name: 'Dark Matter',
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      subdomains: 'abcd',
+      name: 'Dark Cyber (OSM)',
+      url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      className: 'dark-map-tiles',
     },
     osm: {
-      name: 'OpenStreetMap',
+      name: 'OpenStreetMap Classic',
       url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      attribution: '&copy; OpenStreetMap contributors',
-      subdomains: 'abc',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
-    voyager: {
-      name: 'Voyager Day',
-      url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      subdomains: 'abcd',
+    day: {
+      name: 'Daylight Streets (ESRI)',
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      attribution: '&copy; Esri &mdash; DeLorme, NAVTEQ',
     },
     satellite: {
-      name: 'Satellite',
+      name: 'Satellite View (ESRI)',
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       attribution: '&copy; Esri, Maxar, Earthstar',
+    },
+    transit: {
+      name: 'Transit & Walkways (CyclOSM)',
+      url: 'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap contributors &copy; CyclOSM',
       subdomains: 'abc',
     },
   };
 
-  const activeTile = tileConfigs[mapStyle];
+  const activeTile = tileConfigs[mapStyle] || tileConfigs.dark;
 
   return (
     <div className="w-full h-full relative">
@@ -195,7 +208,8 @@ export const MapView: React.FC<MapViewProps> = ({
           key={mapStyle}
           attribution={activeTile.attribution}
           url={activeTile.url}
-          subdomains={activeTile.subdomains}
+          subdomains={activeTile.subdomains || 'abc'}
+          className={activeTile.className || ''}
           maxZoom={19}
         />
 

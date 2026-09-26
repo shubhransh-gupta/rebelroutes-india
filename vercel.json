@@ -1,0 +1,18 @@
+{
+  "services": {
+    "rebelroutes-india-api": {
+      "root": "backend",
+      "entrypoint": "app.main:app",
+      "buildCommand": "pip install -r requirements.txt"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "rebelroutes-india-api"
+      }
+    }
+  ]
+}
