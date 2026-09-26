@@ -72,6 +72,9 @@ export interface OptimalRouteResponse {
   drop_arbitrage?: OptimalCandidate;
   choke_bypasses: ChokeBypassOption[];
   verdict: string;
+  traffic_condition?: 'light' | 'moderate' | 'heavy' | 'gridlock';
+  time_of_day_note?: string;
+  simple_action_steps?: string[];
 }
 
 export interface ForecastBucket {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigation, ArrowDownUp, Zap, Sparkles, Loader2, Footprints } from 'lucide-react';
+import { Navigation, ArrowDownUp, Zap, Sparkles, Loader2, Footprints, Clock } from 'lucide-react';
 import { City, PopularRoute } from '../types';
 import { searchLocations } from '../services/api';
 
@@ -16,6 +16,7 @@ interface RouteSearchProps {
     destination: LocationPoint;
     optimization_mode: string;
     pickup_radius_meters: number;
+    traffic_scenario?: string;
   }) => void;
   isLoading: boolean;
 }
@@ -37,6 +38,7 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({
 
   const [optimizationMode, setOptimizationMode] = useState<'both' | 'pickup' | 'drop'>('both');
   const [walkRadius, setWalkRadius] = useState<number>(500);
+  const [trafficScenario, setTrafficScenario] = useState<'live' | 'peak_morning' | 'peak_evening'>('live');
 
   // Set default popular route when city changes
   useEffect(() => {
@@ -104,6 +106,7 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({
       destination: route.destination,
       optimization_mode: optimizationMode,
       pickup_radius_meters: walkRadius,
+      traffic_scenario: trafficScenario,
     });
   };
 
@@ -115,6 +118,7 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({
       destination: destCoords,
       optimization_mode: optimizationMode,
       pickup_radius_meters: walkRadius,
+      traffic_scenario: trafficScenario,
     });
   };
 
@@ -252,6 +256,37 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({
               onChange={(e) => setWalkRadius(Number(e.target.value))}
               className="w-full accent-emerald-500 cursor-pointer h-1.5 bg-dark-800 rounded-lg"
             />
+          </div>
+        </div>
+
+        {/* Departure Time & Traffic Scenario */}
+        <div className="pt-2 border-t border-dark-800">
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
+              <Clock className="w-3 h-3 text-cyan-400" />
+              <span>Traffic Time:</span>
+            </label>
+            <span className="text-[10px] text-slate-400 font-medium">Real-time dynamic</span>
+          </div>
+          <div className="grid grid-cols-3 gap-1 bg-dark-950 p-1 rounded-lg border border-dark-800">
+            {[
+              { id: 'live', label: '🕒 Right Now' },
+              { id: 'peak_morning', label: '🌅 9:15 AM Rush' },
+              { id: 'peak_evening', label: '🌆 6:45 PM Peak' },
+            ].map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setTrafficScenario(id as any)}
+                className={`py-1 rounded text-[11px] font-medium transition-all ${
+                  trafficScenario === id
+                    ? 'bg-cyan-500 text-dark-950 font-bold shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 

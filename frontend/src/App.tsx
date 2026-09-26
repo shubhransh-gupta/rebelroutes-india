@@ -47,6 +47,7 @@ export const App: React.FC = () => {
     destination: { name: string; lat: number; lng: number };
     optimization_mode: string;
     pickup_radius_meters: number;
+    traffic_scenario?: string;
   }) => {
     if (!currentCity) return;
     setIsLoading(true);
@@ -58,6 +59,7 @@ export const App: React.FC = () => {
         destination: params.destination,
         optimization_mode: params.optimization_mode,
         pickup_radius_meters: params.pickup_radius_meters,
+        traffic_scenario: params.traffic_scenario,
       });
       setRouteData(data);
       setErrandData(null);

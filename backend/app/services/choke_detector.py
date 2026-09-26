@@ -21,10 +21,15 @@ def get_city_by_id(city_id: str) -> Optional[Dict[str, Any]]:
 async def detect_choke_point_bypasses(
     city_id: str,
     polyline_coords: List[List[float]],
-    threshold_distance_meters: float = 650.0
+    threshold_distance_meters: float = 650.0,
+    choke_delay_factor: float = 1.0
 ) -> List[ChokeBypassOption]:
     city = get_city_by_id(city_id)
     if not city or "choke_points" not in city:
+        return []
+
+    # If traffic is completely light/off-peak, choke points are clear — no bypass needed
+    if choke_delay_factor <= 0.15:
         return []
 
     bypasses = []
@@ -58,15 +63,16 @@ async def detect_choke_point_bypasses(
             walk_distance = walk_route["distance_meters"]
             walk_duration = walk_route["duration_seconds"]
 
-            # Driving crawl delay at this choke point
-            crawl_speed_mps = (choke.get("avg_crawl_speed_kmh", 3.5) * 1000) / 3600.0
-            crawl_duration = (walk_distance * 1.3) / max(0.5, crawl_speed_mps) # plus intersection signal delay
-            signal_overhead = 420.0 # ~7 minutes signal wait / bottle-neck crawling
+            # Driving crawl delay scaled dynamically by current traffic factor
+            peak_crawl_speed_mps = (choke.get("avg_crawl_speed_kmh", 3.5) * 1000) / 3600.0
+            crawl_speed_mps = peak_crawl_speed_mps / max(0.5, choke_delay_factor)
+            crawl_duration = (walk_distance * 1.3) / max(0.5, crawl_speed_mps)
+            signal_overhead = 420.0 * choke_delay_factor # signal wait / bottleneck crawling
             total_crawl_seconds = crawl_duration + signal_overhead
 
             time_saved = max(0.0, total_crawl_seconds - walk_duration)
 
-            if time_saved > 90:  # Only recommend if saving > 1.5 mins
+            if time_saved >= 120:  # Only recommend if actually saving >= 2 minutes
                 bypasses.append(
                     ChokeBypassOption(
                         choke_name=choke["name"],

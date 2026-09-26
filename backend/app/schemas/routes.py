@@ -18,6 +18,7 @@ class OptimalRouteRequest(BaseModel):
     pickup_radius_meters: int = Field(default=500, ge=100, le=1500)
     drop_radius_meters: int = Field(default=500, ge=100, le=1500)
     travel_mode: str = Field(default="driving", description="driving or transit")
+    traffic_scenario: str = Field(default="live", description="live, peak_morning, peak_evening")
 
 class RouteGeometry(BaseModel):
     coordinates: List[List[float]] # [[lat, lng], ...]
@@ -58,6 +59,9 @@ class OptimalRouteResponse(BaseModel):
     drop_arbitrage: Optional[OptimalCandidate] = None
     choke_bypasses: List[ChokeBypassOption] = []
     verdict: str
+    traffic_condition: str = "light"
+    time_of_day_note: str = ""
+    simple_action_steps: List[str] = []
 
 class TodoItem(BaseModel):
     category: str

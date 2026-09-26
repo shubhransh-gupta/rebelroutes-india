@@ -28,6 +28,7 @@ export async function calculateOptimalRoute(params: {
   destination: { name: string; lat: number; lng: number };
   optimization_mode: string;
   pickup_radius_meters: number;
+  traffic_scenario?: string;
 }): Promise<OptimalRouteResponse> {
   const res = await fetch(`${API_BASE_URL}/api/routes/optimal`, {
     method: 'POST',
