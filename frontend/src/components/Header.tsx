@@ -1,6 +1,7 @@
 import React from 'react';
 import { Compass, Flame, ShieldCheck, Github } from 'lucide-react';
 import { City } from '../types';
+import { UserMenu } from './UserMenu';
 
 interface HeaderProps {
   currentCity: City | null;
@@ -43,14 +44,16 @@ export const Header: React.FC<HeaderProps> = ({ currentCity }) => {
         </div>
 
         <a
-          href="https://github.com"
+          href="https://github.com/shubhransh-gupta/rebelroutes-india"
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-400 hover:text-white transition-colors"
-          title="Source Code"
+          title="Source Code on GitHub"
         >
           <Github className="w-5 h-5" />
         </a>
+
+        <UserMenu />
       </div>
     </header>
   );
