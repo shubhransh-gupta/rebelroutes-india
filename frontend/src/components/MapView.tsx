@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -9,6 +9,7 @@ import {
   useMap
 } from 'react-leaflet';
 import L from 'leaflet';
+import { Layers, Check } from 'lucide-react';
 import { City, OptimalRouteResponse, MultiStopTodoResponse } from '../types';
 
 interface MapViewProps {
@@ -101,8 +102,83 @@ export const MapView: React.FC<MapViewProps> = ({
     return directPolyline[directPolyline.length - 1];
   }, [directPolyline]);
 
+  const [mapStyle, setMapStyle] = useState<'dark' | 'osm' | 'voyager' | 'satellite'>('dark');
+  const [styleMenuOpen, setStyleMenuOpen] = useState(false);
+
+  const tileConfigs = {
+    dark: {
+      name: 'Dark Matter',
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      subdomains: 'abcd',
+    },
+    osm: {
+      name: 'OpenStreetMap',
+      url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap contributors',
+      subdomains: 'abc',
+    },
+    voyager: {
+      name: 'Voyager Day',
+      url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      subdomains: 'abcd',
+    },
+    satellite: {
+      name: 'Satellite',
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: '&copy; Esri, Maxar, Earthstar',
+      subdomains: 'abc',
+    },
+  };
+
+  const activeTile = tileConfigs[mapStyle];
+
   return (
     <div className="w-full h-full relative">
+      {/* Map Layer Switcher Button */}
+      <div className="absolute top-4 right-4 z-[400]">
+        <div className="relative">
+          <button
+            onClick={() => setStyleMenuOpen((o) => !o)}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-dark-900/90 hover:bg-dark-800 backdrop-blur-md border border-dark-700 rounded-xl text-xs font-medium text-slate-200 shadow-xl transition-all"
+            title="Change Map Style"
+          >
+            <Layers className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden sm:inline">{activeTile.name}</span>
+          </button>
+
+          {styleMenuOpen && (
+            <div className="absolute right-0 top-full mt-2 w-44 bg-dark-900/95 backdrop-blur-md border border-dark-700 rounded-xl shadow-2xl p-1.5 space-y-0.5">
+              <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Map Basemap
+              </div>
+              {(Object.keys(tileConfigs) as Array<keyof typeof tileConfigs>).map((key) => {
+                const item = tileConfigs[key];
+                const isActive = mapStyle === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setMapStyle(key);
+                      setStyleMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
+                      isActive
+                        ? 'bg-emerald-500/20 text-emerald-300 font-semibold'
+                        : 'text-slate-300 hover:bg-dark-800'
+                    }`}
+                  >
+                    <span>{item.name}</span>
+                    {isActive && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
       <MapContainer
         center={center}
         zoom={zoom}
@@ -116,8 +192,10 @@ export const MapView: React.FC<MapViewProps> = ({
         />
 
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+          key={mapStyle}
+          attribution={activeTile.attribution}
+          url={activeTile.url}
+          subdomains={activeTile.subdomains}
           maxZoom={19}
         />
 
