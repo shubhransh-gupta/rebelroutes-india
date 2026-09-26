@@ -1,0 +1,485 @@
+{
+  "cities": [
+    {
+      "id": "bengaluru",
+      "name": "Bengaluru",
+      "state": "Karnataka",
+      "center": { "lat": 12.9716, "lng": 77.5946 },
+      "zoom": 12,
+      "tagline": "The Silicon Valley Choke Point Capital",
+      "choke_points": [
+        {
+          "name": "Silk Board Junction",
+          "coords": { "lat": 12.9176, "lng": 77.6238 },
+          "severity": "extreme",
+          "bypass_tip": "Exit before the flyover ramp, take the pedestrian skywalk towards BTM 2nd stage, and rebook cab on Outer Ring Road service lane.",
+          "avg_crawl_speed_kmh": 3.2
+        },
+        {
+          "name": "Marathahalli Bridge & Market",
+          "coords": { "lat": 12.9555, "lng": 77.7011 },
+          "severity": "extreme",
+          "bypass_tip": "Alight 200m before the bus bay, walk past the railway bridge bottleneck, rebook at Kalamandir signal.",
+          "avg_crawl_speed_kmh": 4.0
+        },
+        {
+          "name": "Bellandur EcoSpace / ORR",
+          "coords": { "lat": 12.9260, "lng": 77.6811 },
+          "severity": "high",
+          "bypass_tip": "Use the campus back pedestrian gate instead of the main road U-turn. Saves up to 25 mins of cab crawling.",
+          "avg_crawl_speed_kmh": 4.5
+        },
+        {
+          "name": "Tin Factory / KR Puram",
+          "coords": { "lat": 12.9984, "lng": 77.6698 },
+          "severity": "extreme",
+          "bypass_tip": "Use the KR Puram Metro concourse pedestrian crossover to bypass the entire Old Madras Road bottle-neck.",
+          "avg_crawl_speed_kmh": 3.5
+        },
+        {
+          "name": "Hebbal Flyover Merge",
+          "coords": { "lat": 13.0358, "lng": 77.5970 },
+          "severity": "high",
+          "bypass_tip": "Airport commuters: drop near Esteem Mall foot-overbridge to beat the multi-lane convergence delay.",
+          "avg_crawl_speed_kmh": 5.0
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Koramangala to Bellandur EcoSpace",
+          "pickup": { "name": "Koramangala Sony Signal", "lat": 12.9352, "lng": 77.6245 },
+          "destination": { "name": "RMZ Ecospace, Outer Ring Road", "lat": 12.9260, "lng": 77.6811 }
+        },
+        {
+          "title": "Indiranagar to Whitefield Tech Park",
+          "pickup": { "name": "100 Feet Road, Indiranagar", "lat": 12.9784, "lng": 77.6408 },
+          "destination": { "name": "ITPL Main Gate, Whitefield", "lat": 12.9858, "lng": 77.7317 }
+        }
+      ]
+    },
+    {
+      "id": "gurgaon",
+      "name": "Gurgaon (Gurugram)",
+      "state": "Haryana",
+      "center": { "lat": 28.4595, "lng": 77.0266 },
+      "zoom": 12,
+      "tagline": "Millennium City Gridlocks & Expressway Churn",
+      "choke_points": [
+        {
+          "name": "Shankar Chowk / Cyber City Loop",
+          "coords": { "lat": 28.5028, "lng": 77.0877 },
+          "severity": "extreme",
+          "bypass_tip": "Walk via DLF Cyber City Rapid Metro footbridge into DLF Phase 2. Avoid Shankar Chowk cloverleaf gridlock.",
+          "avg_crawl_speed_kmh": 3.8
+        },
+        {
+          "name": "IFFCO Chowk Flyover Junction",
+          "coords": { "lat": 28.4720, "lng": 77.0725 },
+          "severity": "high",
+          "bypass_tip": "Cross NH-48 using the Yellow Line Metro subway or elevated walkway; hail auto on MG Road side.",
+          "avg_crawl_speed_kmh": 4.2
+        },
+        {
+          "name": "Rajiv Chowk (Sohna Road Merge)",
+          "coords": { "lat": 28.4510, "lng": 77.0425 },
+          "severity": "high",
+          "bypass_tip": "Alight before the underpass tailback. Walk 150m onto Subhash Chowk connector road.",
+          "avg_crawl_speed_kmh": 5.0
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Cyber Hub to Golf Course Road (Sector 54)",
+          "pickup": { "name": "DLF Cyber Hub Gate 2", "lat": 28.4952, "lng": 77.0888 },
+          "destination": { "name": "Sector 54 Chowk, Golf Course Rd", "lat": 28.4357, "lng": 77.1082 }
+        },
+        {
+          "title": "Ambience Mall to Sohna Road",
+          "pickup": { "name": "Ambience Island, NH-48", "lat": 28.5042, "lng": 77.0970 },
+          "destination": { "name": "Subhash Chowk, Sohna Road", "lat": 28.4285, "lng": 77.0445 }
+        }
+      ]
+    },
+    {
+      "id": "noida",
+      "name": "Noida",
+      "state": "Uttar Pradesh",
+      "center": { "lat": 28.5355, "lng": 77.3910 },
+      "zoom": 12,
+      "tagline": "Wide Expressways, Painful Bottleneck Bottlenecks",
+      "choke_points": [
+        {
+          "name": "Film City Flyover / DND Exit",
+          "coords": { "lat": 28.5685, "lng": 77.3204 },
+          "severity": "high",
+          "bypass_tip": "Avoid the DND toll-gate merge queue. Drop at Sector 16A service road and walk across the foot overbridge.",
+          "avg_crawl_speed_kmh": 4.5
+        },
+        {
+          "name": "Sector 62 / Model Town Crossing",
+          "coords": { "lat": 28.6271, "lng": 77.3688 },
+          "severity": "high",
+          "bypass_tip": "Use the Blue Line Metro skybridge to bypass NH-9 / Sector 62 signal congestion.",
+          "avg_crawl_speed_kmh": 4.0
+        },
+        {
+          "name": "Mahamaya Flyover (Greater Noida Expressway Merge)",
+          "coords": { "lat": 28.5441, "lng": 77.3325 },
+          "severity": "extreme",
+          "bypass_tip": "Shift pickup to Kalindi Kunj border arterial or Botanical Garden hub to bypass expressway entry tailbacks.",
+          "avg_crawl_speed_kmh": 3.6
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Botanical Garden to Sector 62 IT Park",
+          "pickup": { "name": "Botanical Garden Metro", "lat": 28.5643, "lng": 77.3344 },
+          "destination": { "name": "Stellar IT Park, Sector 62", "lat": 28.6280, "lng": 77.3670 }
+        }
+      ]
+    },
+    {
+      "id": "delhi",
+      "name": "Delhi",
+      "state": "Delhi NCR",
+      "center": { "lat": 28.6139, "lng": 77.2090 },
+      "zoom": 12,
+      "tagline": "Ring Roads, Roundabouts & Capital Snarls",
+      "choke_points": [
+        {
+          "name": "Ashram Chowk / Mathura Road",
+          "coords": { "lat": 28.5714, "lng": 77.2588 },
+          "severity": "extreme",
+          "bypass_tip": "Walk through Ashram Metro station unpaid concourse to jump across Ring Road in 2 minutes.",
+          "avg_crawl_speed_kmh": 3.0
+        },
+        {
+          "name": "Dhaula Kuan Intersection",
+          "coords": { "lat": 28.5921, "lng": 77.1614 },
+          "severity": "high",
+          "bypass_tip": "Take the airport express travelator corridor to bypass the multi-way army cantonment convergence.",
+          "avg_crawl_speed_kmh": 4.8
+        },
+        {
+          "name": "ITO Junction / Vikas Marg",
+          "coords": { "lat": 28.6304, "lng": 77.2405 },
+          "severity": "extreme",
+          "bypass_tip": "Cross via ITO metro subways directly to Tilak Bridge side.",
+          "avg_crawl_speed_kmh": 3.2
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Connaught Place to Nehru Place",
+          "pickup": { "name": "Connaught Place Inner Circle", "lat": 28.6315, "lng": 77.2167 },
+          "destination": { "name": "Nehru Place Commercial Complex", "lat": 28.5494, "lng": 77.2528 }
+        }
+      ]
+    },
+    {
+      "id": "pune",
+      "name": "Pune",
+      "state": "Maharashtra",
+      "center": { "lat": 18.5204, "lng": 73.8567 },
+      "zoom": 12,
+      "tagline": "The Hinjawadi Crawl & Bridge Chokepoints",
+      "choke_points": [
+        {
+          "name": "Hinjawadi Shivaji Chowk (Phase 1)",
+          "coords": { "lat": 18.5913, "lng": 73.7389 },
+          "severity": "extreme",
+          "bypass_tip": "Get dropped before Wakad bridge or Phase 1 circle. Walk 250m past the bridge bottlenecks to hail auto.",
+          "avg_crawl_speed_kmh": 3.4
+        },
+        {
+          "name": "Chandani Chowk / Kothrud Bypass",
+          "coords": { "lat": 18.5074, "lng": 73.7844 },
+          "severity": "high",
+          "bypass_tip": "Alight at Bavdhan junction service lane; avoid the highway convergence ramp.",
+          "avg_crawl_speed_kmh": 4.8
+        },
+        {
+          "name": "Viman Nagar / Phoenix Marketcity Chowk",
+          "coords": { "lat": 18.5617, "lng": 73.9168 },
+          "severity": "high",
+          "bypass_tip": "Use the internal lane via Symbiosis Law school to bypass the Nagar Road signal queue.",
+          "avg_crawl_speed_kmh": 4.2
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Kothrud to Hinjawadi Phase 2 IT Park",
+          "pickup": { "name": "Paud Road, Kothrud", "lat": 18.5074, "lng": 73.8077 },
+          "destination": { "name": "Wipro Circle, Hinjawadi Phase 2", "lat": 18.5975, "lng": 73.7191 }
+        },
+        {
+          "title": "Viman Nagar to Magarpatta City",
+          "pickup": { "name": "Phoenix Marketcity, Nagar Rd", "lat": 18.5617, "lng": 73.9168 },
+          "destination": { "name": "Cybercity Tower, Magarpatta", "lat": 18.5147, "lng": 73.9288 }
+        }
+      ]
+    },
+    {
+      "id": "mumbai",
+      "name": "Mumbai (MMR)",
+      "state": "Maharashtra",
+      "center": { "lat": 19.0760, "lng": 72.8777 },
+      "zoom": 12,
+      "tagline": "The Western Express Slog & Island City Squeeze",
+      "choke_points": [
+        {
+          "name": "Kalanagar Junction / BKC Connector",
+          "coords": { "lat": 19.0596, "lng": 72.8489 },
+          "severity": "extreme",
+          "bypass_tip": "Take the Bandra suburban station skywalk or walk via Family Court gate directly into BKC.",
+          "avg_crawl_speed_kmh": 3.0
+        },
+        {
+          "name": "Saki Naka Junction (Andheri-Ghatkopar)",
+          "coords": { "lat": 19.1025, "lng": 72.8879 },
+          "severity": "extreme",
+          "bypass_tip": "Use Metro Line 1 concourse as an elevated pedestrian overpass to cross the junction in 90 seconds.",
+          "avg_crawl_speed_kmh": 2.8
+        },
+        {
+          "name": "JVLR / Powai Gandhinagar Choke",
+          "coords": { "lat": 19.1245, "lng": 72.9234 },
+          "severity": "high",
+          "bypass_tip": "Alight before the Kanjurmarg flyover ramp; shift pickup to Eastern Express service road.",
+          "avg_crawl_speed_kmh": 4.5
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Andheri West to BKC (Bandra Kurla Complex)",
+          "pickup": { "name": "Lokhandwala Complex, Andheri", "lat": 19.1415, "lng": 72.8258 },
+          "destination": { "name": "One BKC, G Block, Bandra East", "lat": 19.0664, "lng": 72.8681 }
+        }
+      ]
+    },
+    {
+      "id": "hyderabad",
+      "name": "Hyderabad",
+      "state": "Telangana",
+      "center": { "lat": 17.3850, "lng": 78.4867 },
+      "zoom": 12,
+      "tagline": "Cyberabad Flyover Conundrums & Pearl City Sprawl",
+      "choke_points": [
+        {
+          "name": "Cyber Towers Junction (Hitec City)",
+          "coords": { "lat": 17.4504, "lng": 78.3808 },
+          "severity": "extreme",
+          "bypass_tip": "Use the Hitec City Metro concourse footbridge to cross between Mindspace and Shilparamam sides.",
+          "avg_crawl_speed_kmh": 3.8
+        },
+        {
+          "name": "Gachibowli Flyover / ORR Junction",
+          "coords": { "lat": 17.4401, "lng": 78.3489 },
+          "severity": "high",
+          "bypass_tip": "Drop at the DLF Cyber City lane before the main intersection to avoid the signal cycle.",
+          "avg_crawl_speed_kmh": 4.5
+        },
+        {
+          "name": "Bio-Diversity Junction / Raidurg",
+          "coords": { "lat": 17.4326, "lng": 78.3789 },
+          "severity": "high",
+          "bypass_tip": "Walk along the pedestrian skywalk connected to Raidurg metro station to avoid the cloverleaf loop.",
+          "avg_crawl_speed_kmh": 4.2
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Jubilee Hills to Hitec City Mindspace",
+          "pickup": { "name": "Jubilee Hills Check Post", "lat": 17.4298, "lng": 78.4116 },
+          "destination": { "name": "Mindspace Madhapur, Hitec City", "lat": 17.4399, "lng": 78.3805 }
+        },
+        {
+          "title": "Banjara Hills to Financial District Gachibowli",
+          "pickup": { "name": "Road No 12, Banjara Hills", "lat": 17.4156, "lng": 78.4410 },
+          "destination": { "name": "ISB Road, Financial District", "lat": 17.4208, "lng": 78.3374 }
+        }
+      ]
+    },
+    {
+      "id": "chennai",
+      "name": "Chennai",
+      "state": "Tamil Nadu",
+      "center": { "lat": 13.0827, "lng": 80.2707 },
+      "zoom": 12,
+      "tagline": "OMR Tech Corridor & Historic Junction Bottlenecks",
+      "choke_points": [
+        {
+          "name": "Kathipara Cloverleaf Junction (Guindy)",
+          "coords": { "lat": 13.0076, "lng": 80.2036 },
+          "severity": "extreme",
+          "bypass_tip": "Use the Alandur Metro interchange pedestrian subway/bridge to hop between GST road and Inner Ring Road.",
+          "avg_crawl_speed_kmh": 3.9
+        },
+        {
+          "name": "Madhya Kailash Junction (OMR Start)",
+          "coords": { "lat": 13.0067, "lng": 80.2444 },
+          "severity": "extreme",
+          "bypass_tip": "Drop at Kasturba Nagar MRTS station lane and walk across the canal bridge to avoid the 4-way signal.",
+          "avg_crawl_speed_kmh": 3.2
+        },
+        {
+          "name": "T. Nagar Usman Road / Panagal Park",
+          "coords": { "lat": 13.0405, "lng": 80.2337 },
+          "severity": "high",
+          "bypass_tip": "Take the newly built elevated skywalk between Mambalam Railway Station and T. Nagar bus terminus.",
+          "avg_crawl_speed_kmh": 3.0
+        },
+        {
+          "name": "TIDEL Park Junction (Tharamani)",
+          "coords": { "lat": 12.9892, "lng": 80.2464 },
+          "severity": "high",
+          "bypass_tip": "Exit via CSIR road back-entrance instead of the Rajiv Gandhi Salai main gate.",
+          "avg_crawl_speed_kmh": 4.4
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Adyar to Sholinganallur (OMR IT Expressway)",
+          "pickup": { "name": "Adyar Signal / Kasturba Nagar", "lat": 13.0067, "lng": 80.2444 },
+          "destination": { "name": "ELCOT SEZ, Sholinganallur", "lat": 12.8992, "lng": 80.2279 }
+        },
+        {
+          "title": "Anna Nagar to Guindy Industrial Estate",
+          "pickup": { "name": "Anna Nagar Roundtana", "lat": 13.0850, "lng": 80.2100 },
+          "destination": { "name": "Guindy Olympic Building", "lat": 13.0067, "lng": 80.2100 }
+        }
+      ]
+    },
+    {
+      "id": "kolkata",
+      "name": "Kolkata",
+      "state": "West Bengal",
+      "center": { "lat": 22.5726, "lng": 88.3639 },
+      "zoom": 12,
+      "tagline": "Howrah Bridges, EM Bypass & Tramway Intersections",
+      "choke_points": [
+        {
+          "name": "Howrah Bridge Approach (Barabazar)",
+          "coords": { "lat": 22.5851, "lng": 88.3468 },
+          "severity": "extreme",
+          "bypass_tip": "Drop at Strand Road ghat and take the 5-minute ferry across the Hooghly River instead of waiting 40 mins on the bridge.",
+          "avg_crawl_speed_kmh": 3.0
+        },
+        {
+          "name": "Park Circus 7-Point Crossing",
+          "coords": { "lat": 22.5435, "lng": 88.3670 },
+          "severity": "extreme",
+          "bypass_tip": "Alight before the flyover entry ramp; walk through Syed Amir Ali Avenue to escape the rotary jam.",
+          "avg_crawl_speed_kmh": 3.4
+        },
+        {
+          "name": "Ultadanga / Hudco Crossing",
+          "coords": { "lat": 22.5937, "lng": 88.3908 },
+          "severity": "high",
+          "bypass_tip": "Use the pedestrian underpass or railway subway at Bidhannagar Road station.",
+          "avg_crawl_speed_kmh": 4.1
+        },
+        {
+          "name": "Sector V Webel Crossing (Salt Lake)",
+          "coords": { "lat": 22.5735, "lng": 88.4331 },
+          "severity": "high",
+          "bypass_tip": "Alight at Karunamoyee or Central Park and walk across ring road to enter tech blocks.",
+          "avg_crawl_speed_kmh": 4.5
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Park Street to Sector V Salt Lake",
+          "pickup": { "name": "Park Street Crossing", "lat": 22.5512, "lng": 88.3524 },
+          "destination": { "name": "RDB Boulevard, Sector V, Salt Lake", "lat": 22.5768, "lng": 88.4344 }
+        },
+        {
+          "title": "Howrah Station to New Town Rajarhat",
+          "pickup": { "name": "Howrah Railway Station", "lat": 22.5839, "lng": 88.3426 },
+          "destination": { "name": "Ecospace Business Park, New Town", "lat": 22.5886, "lng": 88.4716 }
+        }
+      ]
+    },
+    {
+      "id": "lucknow",
+      "name": "Lucknow",
+      "state": "Uttar Pradesh",
+      "center": { "lat": 26.8467, "lng": 80.9462 },
+      "zoom": 12,
+      "tagline": "Nawabi Heritage, Modern Expressways & Railway Chokepoints",
+      "choke_points": [
+        {
+          "name": "Charbagh Railway Station Crossing",
+          "coords": { "lat": 26.8315, "lng": 80.9234 },
+          "severity": "extreme",
+          "bypass_tip": "Use the Charbagh Metro concourse footbridge to cross between the front circle and Hussainganj road.",
+          "avg_crawl_speed_kmh": 3.1
+        },
+        {
+          "name": "Polytechnic Chauraha (Indira Nagar)",
+          "coords": { "lat": 26.8778, "lng": 80.9995 },
+          "severity": "high",
+          "bypass_tip": "Alight 150m before the roundabout; walk across to Faizabad road service lane.",
+          "avg_crawl_speed_kmh": 4.0
+        },
+        {
+          "name": "Hazratganj Main Chauraha",
+          "coords": { "lat": 26.8523, "lng": 80.9458 },
+          "severity": "high",
+          "bypass_tip": "Drop near Janpath Market and use the heritage pedestrian arcade to avoid the 4-phase traffic light.",
+          "avg_crawl_speed_kmh": 4.5
+        },
+        {
+          "name": "Shaheed Path / Gomti Nagar Extension Merge",
+          "coords": { "lat": 26.8291, "lng": 81.0182 },
+          "severity": "high",
+          "bypass_tip": "Shift pickup to Kisan Bazar service road to avoid the flyover slip-road bottleneck.",
+          "avg_crawl_speed_kmh": 5.0
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Hazratganj to Gomti Nagar Riverside",
+          "pickup": { "name": "Hazratganj Atal Chowk", "lat": 26.8523, "lng": 80.9458 },
+          "destination": { "name": "Gomti Nagar Patrakar Puram", "lat": 26.8510, "lng": 81.0035 }
+        },
+        {
+          "title": "Charbagh Station to Alambagh / Airport Road",
+          "pickup": { "name": "Charbagh Station Circle", "lat": 26.8315, "lng": 80.9234 },
+          "destination": { "name": "Alambagh Bus Terminal", "lat": 26.8124, "lng": 80.9038 }
+        }
+      ]
+    },
+    {
+      "id": "ahmedabad",
+      "name": "Ahmedabad",
+      "state": "Gujarat",
+      "center": { "lat": 23.0225, "lng": 72.5714 },
+      "zoom": 12,
+      "tagline": "SG Highway Corridors & BRTS Crossings",
+      "choke_points": [
+        {
+          "name": "SG Highway ISKCON Cross Roads",
+          "coords": { "lat": 23.0288, "lng": 72.5065 },
+          "severity": "high",
+          "bypass_tip": "Walk via BRTS designated pedestrian overpass to cross SG highway safely in under 2 minutes.",
+          "avg_crawl_speed_kmh": 4.2
+        },
+        {
+          "name": "Nehrunagar Circle",
+          "coords": { "lat": 23.0183, "lng": 72.5447 },
+          "severity": "high",
+          "bypass_tip": "Shift pickup to internal university road to avoid the roundabout choke.",
+          "avg_crawl_speed_kmh": 4.8
+        }
+      ],
+      "popular_routes": [
+        {
+          "title": "Vastrapur Lake to GIFT City Gandhinagar",
+          "pickup": { "name": "Vastrapur Lake", "lat": 23.0374, "lng": 72.5292 },
+          "destination": { "name": "GIFT City Tower 1", "lat": 23.1610, "lng": 72.6841 }
+        }
+      ]
+    }
+  ]
+}

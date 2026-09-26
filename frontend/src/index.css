@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #06080d;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1f293d;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* Custom Leaflet Map styling */
+.leaflet-container {
+  background-color: #06080d !important;
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #0c0f17 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #1f293d;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7) !important;
+}
+
+.leaflet-popup-tip {
+  background: #0c0f17 !important;
+}
+
+.custom-leaflet-marker {
+  transition: transform 0.2s ease-in-out;
+}
+.custom-leaflet-marker:hover {
+  transform: scale(1.15);
+  z-index: 9999 !important;
+}
