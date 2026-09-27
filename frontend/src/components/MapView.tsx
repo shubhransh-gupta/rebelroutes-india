@@ -63,6 +63,15 @@ const MapRecenter: React.FC<{
   const map = useMap();
 
   useEffect(() => {
+    // Invalidate size for fluid mobile / desktop tab toggling
+    setTimeout(() => {
+      try {
+        map.invalidateSize();
+      } catch (e) {
+        // ignore
+      }
+    }, 150);
+
     if (routeCoordinates && routeCoordinates.length > 0) {
       const bounds = L.latLngBounds(routeCoordinates);
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
