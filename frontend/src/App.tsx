@@ -235,6 +235,16 @@ export const App: React.FC = () => {
               )}
             </div>
           )}
+
+          {/* Creator Patch */}
+          <div className="pt-4 pb-2 text-center border-t border-dark-800/60 mt-auto">
+            <p className="text-[11px] text-slate-400 flex items-center justify-center gap-1">
+              <span>Created with</span>
+              <span className="text-rose-500">❤️</span>
+              <span>by</span>
+              <span className="font-semibold text-slate-200">Shubhransh Gupta</span>
+            </p>
+          </div>
         </aside>
 
         {/* Right Interactive Map Canvas */}

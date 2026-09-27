@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 export const UserMenu: React.FC = () => {
   const { user, signIn, signOut, isLoading, authError, clearError } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedPerk, setSelectedPerk] = useState<string | null>(null);
 
   return (
     <div className="relative">
@@ -136,25 +137,64 @@ export const UserMenu: React.FC = () => {
 
           {/* Menu items */}
           <div className="p-2">
-            <div className="px-3 py-1.5 text-[10px] text-emerald-400 font-bold uppercase tracking-wider">
-              Rebel Passenger Perks
+            <div className="px-3 py-1.5 flex items-center justify-between">
+              <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">
+                Rebel Passenger Perks
+              </span>
+              <span className="px-1.5 py-0.5 text-[9px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                Under Development
+              </span>
             </div>
+
+            {/* Interactive Notice if a perk is clicked */}
+            {selectedPerk && (
+              <div className="mx-2 mb-2 p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-xs text-amber-200">
+                <div className="flex items-center justify-between font-bold text-amber-300 mb-1">
+                  <span className="flex items-center gap-1">
+                    <span>🚧</span> Feature Under Development
+                  </span>
+                  <button
+                    onClick={() => setSelectedPerk(null)}
+                    className="text-slate-400 hover:text-white px-1 text-xs"
+                    title="Close"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <p className="text-[11px] text-amber-200/90 leading-snug">
+                  <strong>{selectedPerk}</strong> is actively being built for {user.name.split(' ')[0]}. In the next release, this will automatically sync and track your routes across devices!
+                </p>
+              </div>
+            )}
+
             <div className="space-y-0.5">
               {[
                 { icon: Route, label: 'Saved Bypass Routes', sublabel: 'Auto-syncs across your devices' },
                 { icon: MapPin, label: 'Frequent Choke Alerts', sublabel: 'Notify me before departure' },
                 { icon: Bookmark, label: 'Trip Savings Diary', sublabel: 'Track total commute minutes saved' },
               ].map(({ icon: Icon, label, sublabel }) => (
-                <div
+                <button
                   key={label}
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs hover:bg-dark-800/70 cursor-pointer transition-colors"
+                  type="button"
+                  onClick={() => setSelectedPerk(selectedPerk === label ? null : label)}
+                  className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                    selectedPerk === label
+                      ? 'bg-amber-500/20 border border-amber-500/40'
+                      : 'hover:bg-dark-800/70 border border-transparent'
+                  }`}
                 >
-                  <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <div>
-                    <p className="font-medium text-slate-200">{label}</p>
-                    <p className="text-[10px] text-slate-400">{sublabel}</p>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-200 truncate">{label}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{sublabel}</p>
+                    </div>
                   </div>
-                </div>
+                  <span className="text-[9px] font-medium text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded shrink-0 ml-2">
+                    Soon
+                  </span>
+                </button>
               ))}
             </div>
 

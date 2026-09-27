@@ -43,6 +43,13 @@ export const Header: React.FC<HeaderProps> = ({ currentCity }) => {
           <span className="font-medium hidden sm:inline">100% Free Public Service</span>
         </div>
 
+        <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-dark-800/90 text-slate-300 border border-dark-700/80 shadow-sm">
+          <span>Created with</span>
+          <span className="text-rose-500">❤️</span>
+          <span>by</span>
+          <span className="font-semibold text-emerald-400">Shubhransh Gupta</span>
+        </div>
+
         <a
           href="https://github.com/shubhransh-gupta/rebelroutes-india"
           target="_blank"
