@@ -6,11 +6,19 @@ export interface Coordinate {
 export type float = number;
 
 export interface ChokePoint {
+  id?: string;
   name: string;
+  zone?: string;
   coords: Coordinate;
-  severity: 'extreme' | 'high' | 'moderate';
+  severity: 'extreme' | 'high' | 'moderate' | 'low';
   bypass_tip: string;
-  avg_crawl_speed_kmh: number;
+  avg_crawl_speed_kmh?: number;
+  current_speed_kmh?: number;
+  current_delay_mins?: number;
+  status_label?: string;
+  status_color?: string;
+  trend?: string;
+  last_updated?: string;
 }
 
 export interface PopularRoute {
@@ -28,6 +36,9 @@ export interface City {
   tagline: string;
   choke_points: ChokePoint[];
   popular_routes: PopularRoute[];
+  live_traffic_status?: string;
+  live_traffic_intensity?: number;
+  last_updated_ist?: string;
 }
 
 export interface RouteGeometry {

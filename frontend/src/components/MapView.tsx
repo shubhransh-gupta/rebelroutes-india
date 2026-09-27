@@ -9,13 +9,15 @@ import {
   useMap
 } from 'react-leaflet';
 import L from 'leaflet';
-import { Layers, Check } from 'lucide-react';
+import { Layers, Check, RefreshCw } from 'lucide-react';
 import { City, OptimalRouteResponse, MultiStopTodoResponse } from '../types';
 
 interface MapViewProps {
   currentCity: City | null;
   routeData: OptimalRouteResponse | null;
   errandData: MultiStopTodoResponse | null;
+  onRefreshLiveTraffic?: () => void;
+  isRefreshingLive?: boolean;
 }
 
 // Custom Leaflet Icons
@@ -76,6 +78,8 @@ export const MapView: React.FC<MapViewProps> = ({
   currentCity,
   routeData,
   errandData,
+  onRefreshLiveTraffic,
+  isRefreshingLive,
 }) => {
   const center: [number, number] = useMemo(() => {
     if (currentCity) return [currentCity.center.lat, currentCity.center.lng];
@@ -192,6 +196,56 @@ export const MapView: React.FC<MapViewProps> = ({
         </div>
       </div>
 
+      {/* Live City Traffic HUD / Radar */}
+      {currentCity && (
+        <div className="absolute bottom-6 left-4 z-[400] max-w-xs pointer-events-auto">
+          <div className="bg-dark-900/90 backdrop-blur-md border border-dark-700/80 rounded-2xl p-3 shadow-2xl text-xs space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span className="font-bold text-slate-100">Live Traffic Radar</span>
+              </div>
+              {onRefreshLiveTraffic && (
+                <button
+                  onClick={onRefreshLiveTraffic}
+                  disabled={isRefreshingLive}
+                  className="p-1 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-dark-800 transition-colors"
+                  title="Refresh Live Traffic Data"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingLive ? 'animate-spin text-emerald-400' : ''}`} />
+                </button>
+              )}
+            </div>
+
+            <div className="bg-dark-950/80 p-2 rounded-xl border border-dark-800 space-y-1">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-400">City:</span>
+                <span className="font-semibold text-slate-200">{currentCity.name}</span>
+              </div>
+              {currentCity.live_traffic_status && (
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-400">Status:</span>
+                  <span className="font-bold text-amber-400">{currentCity.live_traffic_status}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="text-slate-400">Active Monitors:</span>
+                <span className="font-bold text-emerald-400">{currentCity.choke_points.length} Corridors</span>
+              </div>
+              {currentCity.last_updated_ist && (
+                <div className="flex justify-between items-center text-[10px] text-slate-400 pt-1 border-t border-dark-800/80">
+                  <span>Updated:</span>
+                  <span>{currentCity.last_updated_ist}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <MapContainer
         center={center}
         zoom={zoom}
@@ -213,36 +267,66 @@ export const MapView: React.FC<MapViewProps> = ({
           maxZoom={19}
         />
 
-        {/* Choke Point Hotspot Radars for Active City */}
-        {currentCity?.choke_points.map((choke, i) => (
-          <React.Fragment key={i}>
-            <Circle
-              center={[choke.coords.lat, choke.coords.lng]}
-              radius={400}
-              pathOptions={{
-                color: '#f97316',
-                fillColor: '#f97316',
-                fillOpacity: 0.15,
-                weight: 1.5,
-                dashArray: '4, 6',
-              }}
-            />
-            <Marker
-              position={[choke.coords.lat, choke.coords.lng]}
-              icon={createCustomIcon('#f97316', '⚡', 22)}
-            >
-              <Popup className="custom-popup">
-                <div className="p-1">
-                  <p className="font-bold text-slate-900 text-xs">{choke.name}</p>
-                  <p className="text-[11px] text-slate-700 mt-1">{choke.bypass_tip}</p>
-                  <span className="inline-block mt-1 text-[10px] font-bold bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded">
-                    Avg Crawl: {choke.avg_crawl_speed_kmh} km/h
-                  </span>
-                </div>
-              </Popup>
-            </Marker>
-          </React.Fragment>
-        ))}
+        {/* Choke Point Hotspot Radars for Active City (Dynamically Derived) */}
+        {currentCity?.choke_points.map((choke, i) => {
+          const color = choke.status_color || '#f97316';
+          return (
+            <React.Fragment key={choke.id || i}>
+              <Circle
+                center={[choke.coords.lat, choke.coords.lng]}
+                radius={380}
+                pathOptions={{
+                  color: color,
+                  fillColor: color,
+                  fillOpacity: 0.18,
+                  weight: 1.5,
+                  dashArray: '4, 6',
+                }}
+              />
+              <Marker
+                position={[choke.coords.lat, choke.coords.lng]}
+                icon={createCustomIcon(color, '⚡', 24)}
+              >
+                <Popup className="custom-popup">
+                  <div className="p-1 space-y-1.5 text-slate-100 min-w-[200px]">
+                    <div className="flex items-center justify-between gap-2 border-b border-dark-700/60 pb-1">
+                      <p className="font-bold text-slate-100 text-xs">{choke.name}</p>
+                      {choke.status_label && (
+                        <span
+                          className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded"
+                          style={{ backgroundColor: `${color}25`, color: color }}
+                        >
+                          {choke.status_label}
+                        </span>
+                      )}
+                    </div>
+                    {choke.zone && <p className="text-[10px] text-slate-400">{choke.zone}</p>}
+
+                    <div className="grid grid-cols-2 gap-1.5 py-1 text-[11px] bg-dark-950/80 p-1.5 rounded-lg border border-dark-800">
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">Live Speed</span>
+                        <span className="font-bold text-amber-300">
+                          {choke.current_speed_kmh || choke.avg_crawl_speed_kmh} km/h
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">Live Delay</span>
+                        <span className="font-bold text-rose-400">
+                          +{choke.current_delay_mins || 15} mins
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-slate-300 pt-0.5 leading-snug">{choke.bypass_tip}</p>
+                    {choke.last_updated && (
+                      <p className="text-[9px] text-slate-400 italic pt-0.5">{choke.last_updated}</p>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            </React.Fragment>
+          );
+        })}
 
         {/* Direct Standard Route (Dashed Slate) */}
         {directPolyline.length > 0 && (

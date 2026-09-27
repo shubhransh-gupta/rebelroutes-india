@@ -35,6 +35,24 @@ export const App: React.FC = () => {
       });
   }, []);
 
+  const [isRefreshingLive, setIsRefreshingLive] = useState(false);
+
+  const handleRefreshTraffic = async () => {
+    setIsRefreshingLive(true);
+    try {
+      const data = await fetchCities();
+      setCities(data);
+      if (currentCity) {
+        const updated = data.find((c) => c.id === currentCity.id);
+        if (updated) setCurrentCity(updated);
+      }
+    } catch (err) {
+      console.error('Failed to refresh traffic:', err);
+    } finally {
+      setIsRefreshingLive(false);
+    }
+  };
+
   const handleSelectCity = (city: City) => {
     setCurrentCity(city);
     setRouteData(null);
@@ -225,6 +243,8 @@ export const App: React.FC = () => {
             currentCity={currentCity}
             routeData={routeData}
             errandData={errandData}
+            onRefreshLiveTraffic={handleRefreshTraffic}
+            isRefreshingLive={isRefreshingLive}
           />
         </main>
       </div>

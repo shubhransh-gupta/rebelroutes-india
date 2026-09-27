@@ -42,17 +42,36 @@ def root():
         ]
     }
 
+from app.services.live_traffic import get_dynamic_city_traffic
+
 @app.get("/api/cities")
 def get_cities():
     data = load_cities_data()
-    return data.get("cities", [])
+    cities = data.get("cities", [])
+    # Dynamically inject live runtime choke points, current speeds, and delays
+    for c in cities:
+        live = get_dynamic_city_traffic(c["id"])
+        c["choke_points"] = live["choke_points"]
+        c["live_traffic_status"] = live["overall_status"]
+        c["live_traffic_intensity"] = live["traffic_intensity"]
+        c["last_updated_ist"] = live["timestamp_ist"]
+    return cities
 
 @app.get("/api/cities/{city_id}")
 def get_city(city_id: str):
     city = get_city_by_id(city_id)
     if not city:
         raise HTTPException(status_code=404, detail=f"City '{city_id}' not found.")
+    live = get_dynamic_city_traffic(city_id)
+    city["choke_points"] = live["choke_points"]
+    city["live_traffic_status"] = live["overall_status"]
+    city["live_traffic_intensity"] = live["traffic_intensity"]
+    city["last_updated_ist"] = live["timestamp_ist"]
     return city
+
+@app.get("/api/traffic/live")
+def get_live_traffic(city_id: str = Query("bengaluru")):
+    return get_dynamic_city_traffic(city_id)
 
 @app.get("/api/search")
 async def autocomplete(q: str = Query(..., min_length=2), city: Optional[str] = ""):
