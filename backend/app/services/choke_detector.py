@@ -21,7 +21,7 @@ def get_city_by_id(city_id: str) -> Optional[Dict[str, Any]]:
 async def detect_choke_point_bypasses(
     city_id: str,
     polyline_coords: List[List[float]],
-    threshold_distance_meters: float = 650.0,
+    threshold_distance_meters: float = 280.0,
     choke_delay_factor: float = 1.0
 ) -> List[ChokeBypassOption]:
     city = get_city_by_id(city_id)
@@ -34,6 +34,9 @@ async def detect_choke_point_bypasses(
 
     bypasses = []
     choke_points = city["choke_points"]
+    n_pts = len(polyline_coords)
+    if n_pts < 10:
+        return []
 
     for choke in choke_points:
         choke_lat = choke["coords"]["lat"]
@@ -48,44 +51,86 @@ async def detect_choke_point_bypasses(
                 min_dist = d
                 closest_idx = idx
 
+        # Route must pass right through or immediately next to the choke intersection
         if min_dist <= threshold_distance_meters and closest_idx != -1:
-            # Route passes through this notorious choke point!
-            # Sample upstream exit point and downstream rebook point
-            n_pts = len(polyline_coords)
-            exit_idx = max(0, closest_idx - max(2, int(n_pts * 0.12)))
-            rebook_idx = min(n_pts - 1, closest_idx + max(2, int(n_pts * 0.12)))
-            
+            # Walk backwards along polyline ~160m to 200m before the junction to find the safe drop point
+            exit_idx = closest_idx
+            dist_back = 0.0
+            for i in range(closest_idx - 1, -1, -1):
+                dist_back += haversine_distance_meters(
+                    polyline_coords[i][0], polyline_coords[i][1],
+                    polyline_coords[i+1][0], polyline_coords[i+1][1]
+                )
+                exit_idx = i
+                if dist_back >= 170.0:
+                    break
+
+            # Walk forward along polyline ~160m to 200m past the junction to find the clear re-hail point
+            rebook_idx = closest_idx
+            dist_fwd = 0.0
+            for i in range(closest_idx + 1, n_pts):
+                dist_fwd += haversine_distance_meters(
+                    polyline_coords[i-1][0], polyline_coords[i-1][1],
+                    polyline_coords[i][0], polyline_coords[i][1]
+                )
+                rebook_idx = i
+                if dist_fwd >= 170.0:
+                    break
+
+            # If the user origin or destination is too close to the choke point (<90m), bypass is meaningless
+            if dist_back < 90.0 or dist_fwd < 90.0:
+                continue
+
             exit_pt = polyline_coords[exit_idx]
             rebook_pt = polyline_coords[rebook_idx]
 
-            # Calculate walking shortcut
-            walk_route = await fetch_osrm_route(exit_pt[0], exit_pt[1], rebook_pt[0], rebook_pt[1], mode="walking")
-            walk_distance = walk_route["distance_meters"]
-            walk_duration = walk_route["duration_seconds"]
+            # Direct straight / footpath distance between drop and re-hail points
+            direct_walk_dist = haversine_distance_meters(exit_pt[0], exit_pt[1], rebook_pt[0], rebook_pt[1])
+            # Urban walking path factor
+            walk_distance = direct_walk_dist * 1.15
 
-            # Driving crawl delay scaled dynamically by current traffic factor
-            peak_crawl_speed_mps = (choke.get("avg_crawl_speed_kmh", 3.5) * 1000) / 3600.0
-            crawl_speed_mps = peak_crawl_speed_mps / max(0.5, choke_delay_factor)
-            crawl_duration = (walk_distance * 1.3) / max(0.5, crawl_speed_mps)
-            signal_overhead = 420.0 * choke_delay_factor # signal wait / bottleneck crawling
-            total_crawl_seconds = crawl_duration + signal_overhead
+            # Commuter safety check: Nobody walks more than 420 meters to bypass a junction
+            if walk_distance > 420.0 or walk_distance < 120.0:
+                continue
 
-            time_saved = max(0.0, total_crawl_seconds - walk_duration)
+            # Walking pace: ~4.5 km/h = 1.25 m/s
+            walk_duration = walk_distance / 1.25
+            
+            # Re-hailing buffer on the other side (auto hail / driver approach): ~2.5 mins
+            rehail_buffer_seconds = 150.0
 
-            if time_saved >= 120:  # Only recommend if actually saving >= 2 minutes
+            # Driving crawl delay through this bottleneck stretch:
+            # Crawl speed in peak traffic: ~4-7 km/h (1.1 - 1.9 m/s)
+            crawl_speed_mps = max(0.9, (choke.get("avg_crawl_speed_kmh", 5.0) * 1000.0) / 3600.0) / max(0.7, choke_delay_factor)
+            driving_crawl_time = (walk_distance * 1.2) / crawl_speed_mps
+            # Signal queue overhead: 2-3 signal cycles in peak Indian traffic
+            signal_queue_overhead = 270.0 * choke_delay_factor
+            total_crawl_seconds = driving_crawl_time + signal_queue_overhead
+
+            # Net realistic time saved by walking through the choke point
+            net_time_saved = max(0.0, total_crawl_seconds - (walk_duration + rehail_buffer_seconds))
+
+            # Only recommend if actually saving at least 2.5 minutes
+            if net_time_saved >= 150.0:
+                # Sub-segment geometry for map rendering
+                walk_geom = polyline_coords[exit_idx:rebook_idx+1]
                 bypasses.append(
                     ChokeBypassOption(
                         choke_name=choke["name"],
                         severity=choke.get("severity", "high"),
                         exit_point=Coordinate(lat=exit_pt[0], lng=exit_pt[1]),
                         rebook_point=Coordinate(lat=rebook_pt[0], lng=rebook_pt[1]),
-                        walking_path=walk_route["coordinates"],
+                        walking_path=walk_geom,
                         walk_distance_meters=round(walk_distance, 0),
                         walk_duration_seconds=round(walk_duration, 0),
                         driving_crawl_duration_seconds=round(total_crawl_seconds, 0),
-                        net_time_saved_seconds=round(time_saved, 0),
+                        net_time_saved_seconds=round(net_time_saved, 0),
                         bypass_advice=choke.get("bypass_tip", "Walk past the choke point and hail a ride on the clear arterial road.")
                     )
                 )
+
+        # Cap at at most 1 choke bypass per commute so the route remains practical and not exhausting
+        if len(bypasses) >= 1:
+            break
 
     return bypasses

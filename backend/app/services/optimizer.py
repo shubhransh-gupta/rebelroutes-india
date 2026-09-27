@@ -174,8 +174,28 @@ async def compute_rebel_optimal_route(req: OptimalRouteRequest) -> OptimalRouteR
         choke_delay_factor=profile["choke_delay_factor"]
     )
     
-    choke_time_saved = sum(c.net_time_saved_seconds for c in choke_bypasses)
-    rebel_duration_final = max(180.0, best_rebel_dur - (choke_time_saved * 0.75))
+    # Calculate realistic time savings
+    pickup_saved_sec = best_pickup_cand.time_saved_seconds if best_pickup_cand else 0.0
+    choke_saved_sec = sum(c.net_time_saved_seconds for c in choke_bypasses)
+    
+    total_raw_savings = pickup_saved_sec + choke_saved_sec
+    
+    # Commuter reality cap: A smart route in Indian traffic realistically saves 15% to 30% of total travel time.
+    # It can NEVER reduce a 1-hour trip to 3 minutes!
+    max_realistic_savings = baseline_total_seconds * 0.32
+    actual_savings = min(total_raw_savings, max_realistic_savings)
+    
+    # Absolute physical floor: Driving the remaining distance at free-flow city speed (35-40 km/h)
+    total_walk_meters = (best_pickup_cand.walk_distance_meters if best_pickup_cand else 0.0) + \
+                        sum(c.walk_distance_meters for c in choke_bypasses)
+    total_walk_seconds = (best_pickup_cand.walk_duration_seconds if best_pickup_cand else 0.0) + \
+                         sum(c.walk_duration_seconds for c in choke_bypasses)
+    
+    remaining_drive_meters = max(500.0, direct_dist - total_walk_meters)
+    min_physical_drive_seconds = remaining_drive_meters / 10.0  # ~36 km/h absolute fastest in city
+    absolute_min_duration = min_physical_drive_seconds + total_walk_seconds + (120.0 if choke_bypasses else 0.0)
+    
+    rebel_duration_final = max(absolute_min_duration, baseline_total_seconds - actual_savings)
     total_saved = max(0.0, baseline_total_seconds - rebel_duration_final)
     saved_mins = round(total_saved / 60.0, 1)
 
@@ -190,7 +210,7 @@ async def compute_rebel_optimal_route(req: OptimalRouteRequest) -> OptimalRouteR
         verdict = f"🟢 Clear roads right now ({profile['time_str']})! Traffic is flowing smoothly. Take the direct route straight to your destination — no walking or bypasses needed."
         action_steps = [
             "🚗 Take a direct cab or auto straight from your door to your destination.",
-            f"⏱️ Roads are clear at this hour — estimated travel time is just ~{direct_mins} mins.",
+            f"⏱️ Roads are clear at this hour — estimated travel time is ~{direct_mins} mins.",
             "🌙 No traffic bottlenecks detected on your corridor right now."
         ]
         rebel_duration_final = baseline_total_seconds
@@ -200,23 +220,26 @@ async def compute_rebel_optimal_route(req: OptimalRouteRequest) -> OptimalRouteR
         choke_bypasses = []
     else:
         # Congested roads: Provide step-by-step guidance in simple English
-        verdict = f"⚡ Save ~{saved_mins} mins! Skip the {profile['condition']} rush hour congestion ({profile['time_str']})."
+        verdict = f"⚡ Save ~{saved_mins} mins! Avoid signal crawl and gate delay ({profile['time_str']})."
         
         step_num = 1
         if best_pickup_cand:
             action_steps.append(
-                f"Step {step_num}: Walk {int(best_pickup_cand.walk_distance_meters)}m outside to the main road (~{max(1, round(best_pickup_cand.walk_duration_seconds/60))} min walk) to skip the gate line."
+                f"Step {step_num}: Walk {int(best_pickup_cand.walk_distance_meters)}m outside to the main road (~{max(1, round(best_pickup_cand.walk_duration_seconds/60))} min walk) to skip the campus gate queue."
             )
             step_num += 1
 
         for bp in choke_bypasses:
+            walk_m = int(bp.walk_distance_meters)
+            walk_mins_est = max(1, round(bp.walk_duration_seconds / 60))
+            drop_m = int(walk_m * 0.45)
             action_steps.append(
-                f"Step {step_num}: At {bp.choke_name}, ask the driver to drop you before the signal. Walk {int(bp.walk_distance_meters)}m past the jam and re-hail your ride on the clear road ahead."
+                f"Step {step_num}: At {bp.choke_name}, ask the driver to drop you ~{drop_m}m before the junction. Walk {walk_m}m past the signal bottleneck (~{walk_mins_est} min walk) and re-hail your ride on the clear road ahead."
             )
             step_num += 1
 
         action_steps.append(
-            f"🎯 Result: You arrive in ~{rebel_mins} mins instead of sitting in traffic for {direct_mins} mins."
+            f"🎯 Realistic Outcome: You arrive in ~{rebel_mins} mins instead of sitting in traffic for {direct_mins} mins (saving ~{saved_mins} mins)."
         )
 
     return OptimalRouteResponse(
