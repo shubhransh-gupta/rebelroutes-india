@@ -124,7 +124,7 @@ graph TD
 ## 💻 Local Development Setup
 
 ### Prerequisites
-- Node.js 18+ & npm
+- Node.js 20+ & npm (required by the PWA build tooling)
 - Python 3.10+
 
 ### 1. Backend Setup
